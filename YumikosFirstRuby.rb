@@ -3,12 +3,14 @@
 
 require "rubygems"
 require "serialport"
+require './led'
 
 RED   =  'FF0000'
 GREEN =  '00FF00'
 BLUE =   '0000FF'
 BLACK  = '000000'
 WHITE  = 'FFFFFF'
+PURPLE = 'FF00FF'
 
 # DONT WORRY ABOUT THIS STUFF IS JUST TO OPEN A CONNECTION TO THE CUBE
 begin
@@ -16,12 +18,26 @@ sp = SerialPort.new("COM20",9600)
 rescue
 end
 
+led_cube = LedCube.new
+led_cube.all_off
+sp.write( led_cube.cube_command)
+led_cube.all_on
+led = led_cube.get_led(0,0,0)
+led.blue = 255
+led.red = 255
+sp.write( led_cube.cube_command)
+sleep(10)
+
+
+
 led_color = WHITE
 
 x=0
 y=0
 z=0
 counter = 0
+
+
 
 while (counter < 10000)
     x = rand(4)
